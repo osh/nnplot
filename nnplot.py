@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# NN Plot 
+# NN Plot
 # Tim O'Shea (c) 2016
 #
 #
@@ -9,17 +9,15 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import matplotlib.lines as lines
 
-io = [
-    ["Input", (2,128)],
-    ["Output", (2,128)]
-    ]
-layers = [
-    ['Conv2D(1,1,40)\nLinear', 0.5, 40, 5],
-    ['Dense(44)\nRelu', None, 10, 2],
-    ['Dense(2*88)\nRelu', None, 15, 3],
-    ['Conv2D(1,1,81)\nLinear', 0.5, 40, 5]
-    ]
+# load the config def
+import sys,json
+fn = sys.argv[1]
+print fn
+cfg = json.loads(open(fn).read())
+io = cfg["io"]
+layers = cfg["layers"]
 
+# ...
 maxy = max(map(lambda x: x[3], layers))
 print maxy
 fig = plt.figure()
@@ -39,7 +37,7 @@ for i,l in enumerate(layers):
         rotation=90)
 
     if(i < len(layers)-1):
-    
+
         h_n = layers[i+1][3]
         lr_n=(maxy-h_n)/2.0
         i_x = ll+w
@@ -63,11 +61,11 @@ for i,l in enumerate(layers):
             for j in range(0,layers[i+1][2]):
                 j_rel = (j*1.0/(layers[i+1][2]-1))
                 ax.add_patch( patches.Circle([o_x+w,lr_n+h_n*j_rel], 0.025, color='blue', ec="none") )
- 
-ax.annotate("Inputs (2x128)", xy=(0,maxy/2.0),
+
+ax.annotate("Inputs (2x88)", xy=(0,maxy/2.0),
         ha='center',va='center',
         rotation=90)
-ax.annotate("Outputs (2x128)", xy=(len(layers),maxy/2.0),
+ax.annotate("Outputs (2x88)", xy=(len(layers),maxy/2.0),
         ha='center',va='center',
         rotation=90)
 
@@ -78,8 +76,3 @@ plt.xlim(-xmarg,len(layers)+xmarg)
 plt.axis('off')
 plt.savefig('test.png', bbix_inches='tight')
 plt.show()
-
-
-
-
-
